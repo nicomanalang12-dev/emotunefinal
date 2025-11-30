@@ -11,6 +11,7 @@
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <script type="text/javascript">
        (function(){
+          // Your EmailJS Public Key
           emailjs.init("Mq3DHE-7E1nccTgSd");
        })();
     </script>
@@ -27,6 +28,7 @@
             <div class="input-group">
                 <i class="fas fa-lock"></i>
                 <input type="password" id="password" placeholder="Password" required>
+                <i class="fas fa-eye password-toggle" id="toggle-password"></i>
             </div>
             <button type="submit" id="auth-btn" class="auth-btn">Login</button>
             <p id="toggle-link" class="toggle-link">
@@ -106,13 +108,10 @@
                             <div class="playlist-settings">
                                 <label for="happy-playlist">Happy Playlist URL:</label>
                                 <input type="url" id="happy-playlist" placeholder="e.g., https://spotify.com/happy-mix">
-                                
                                 <label for="sad-playlist">Sad Playlist URL:</label>
                                 <input type="url" id="sad-playlist" placeholder="e.g., https://youtube.com/calm-music">
-                                
                                 <label for="stressed-playlist">Stressed Playlist URL:</label>
                                 <input type="url" id="stressed-playlist" placeholder="e.g., https://spotify.com/sleep-aid">
-                                
                                 <label for="focused-playlist">Focused Playlist URL:</label>
                                 <input type="url" id="focused-playlist" placeholder="e.g., https://youtube.com/lofi-beats">
                             </div>
@@ -127,7 +126,6 @@
                     <div class="dashboard-card full-width-card">
                         <div class="card-header mood-header">Instant Music Search</div>
                         <div class="card-body">
-                            
                             <div id="query-step-1">
                                 <p>Select your mood to instantly search YouTube for the best music matching that feeling.</p>
                                 <div class="mood-selector">
@@ -137,7 +135,6 @@
                                     <button id="focused-query-mode">🧐 Focused</button>
                                 </div>
                             </div>
-
                             <div id="query-step-2" style="display: none;">
                                 <p id="language-instruction" style="font-weight: bold; color: #333; margin-bottom: 1rem;">Which language do you prefer?</p>
                                 <div class="mood-selector">
@@ -148,7 +145,6 @@
                                 </div>
                                 <button id="cancel-query-btn" style="margin-top: 15px; background: none; border: none; color: #888; cursor: pointer; text-decoration: underline;">Back to Moods</button>
                             </div>
-
                         </div>
                     </div>
                 </div>

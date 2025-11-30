@@ -1,51 +1,57 @@
+/* === 1. API CONFIGURATION === */
 const YOUTUBE_API_KEY = "AIzaSyA22gZKHrsN_6YeMWjoZ6prAW4mMfoW_ig"; 
 const YOUTUBE_API_URL = "https://www.googleapis.com/youtube/v3/search";
 
+/* === 2. IMPORT FIREBASE FUNCTIONS === */
 import { initializeApp } from "firebase/app";
 import { 
-    getFirestore, collection, addDoc, doc, setDoc, getDoc,
-    query, where, orderBy, getDocs 
+  getFirestore, collection, addDoc, doc, setDoc, getDoc,
+  query, where, orderBy, getDocs 
 } from "firebase/firestore";
 import { 
-    getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, 
-    signOut, onAuthStateChanged 
+  getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, 
+  signOut, onAuthStateChanged 
 } from "firebase/auth";
 
+/* === 3. FIREBASE CONFIGURATION === */
 const firebaseConfig = {
-    apiKey: "AIzaSyCxqC2ZVv-Mr1qIBCYvnOj5L3KbO9RwrUk", 
-    authDomain: "emotune-8db65.firebaseapp.com",
-    projectId: "emotune-8db65",
-    storageBucket: "emotune-8db65.firebasestorage.app",
-    messagingSenderId: "448392645543",
-    appId: "1:448392645543:web:e191634f04a02d0c2ec482",
-    measurementId: "G-VR0EXXF588"
+  apiKey: "AIzaSyCxqC2ZVv-Mr1qIBCYvnOj5L3KbO9RwrUk", 
+  authDomain: "emotune-8db65.firebaseapp.com",
+  projectId: "emotune-8db65",
+  storageBucket: "emotune-8db65.firebasestorage.app",
+  messagingSenderId: "448392645543",
+  appId: "1:448392645543:web:e191634f04a02d0c2ec482",
+  measurementId: "G-VR0EXXF588"
 };
 
+/* === 4. INITIALIZE FIREBASE === */
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
 
+/* === 5. GET HTML ELEMENTS === */
 const loginContainer = document.getElementById('login-container');
 const appContainer = document.getElementById('app-container');
-
 const authForm = document.getElementById('auth-form');
 const formTitle = document.getElementById('form-title');
 const emailInput = document.getElementById('email');
 const passwordInput = document.getElementById('password');
 const authBtn = document.getElementById('auth-btn');
 const toggleLink = document.getElementById('toggle-link');
-
 const logoutBtn = document.getElementById('logout-btn'); 
 const sidebarLinks = document.querySelectorAll('.sidebar-nav li'); 
 const viewTitle = document.getElementById('view-title'); 
 const allViews = document.querySelectorAll('.main-view'); 
 const moodLogList = document.getElementById('mood-log-list'); 
+const togglePasswordBtn = document.getElementById('toggle-password'); 
 
+// Playlist Mode Buttons
 const happyPlaylistBtn = document.getElementById('happy-playlist-mode');
 const sadPlaylistBtn = document.getElementById('sad-playlist-mode');
 const stressedPlaylistBtn = document.getElementById('stressed-playlist-mode');
 const focusedPlaylistBtn = document.getElementById('focused-playlist-mode');
 
+// Query Mode Elements
 const happyQueryBtn = document.getElementById('happy-query-mode');
 const sadQueryBtn = document.getElementById('sad-query-mode');
 const stressedQueryBtn = document.getElementById('stressed-query-mode');
@@ -56,66 +62,59 @@ const languageInstruction = document.getElementById('language-instruction');
 const langButtons = document.querySelectorAll('.lang-btn');
 const cancelQueryBtn = document.getElementById('cancel-query-btn');
 
+// Playlist Inputs
 const happyPlaylistInput = document.getElementById('happy-playlist');
 const sadPlaylistInput = document.getElementById('sad-playlist');
 const stressedPlaylistInput = document.getElementById('stressed-playlist');
 const focusedPlaylistInput = document.getElementById('focused-playlist');
 const savePlaylistsBtn = document.getElementById('save-playlists-btn');
 
+// Feedback Elements
 const feedbackText = document.getElementById('feedback-text');
 const sendFeedbackBtn = document.getElementById('send-feedback-btn');
 
+/* === 6. APP LOGIC === */
 let currentUserId = null;
 let isLogin = true; 
 let pendingQueryMood = null; 
 
+// --- Auth Toggle ---
 toggleLink.addEventListener('click', (e) => {
-    e.preventDefault(); 
-    isLogin = !isLogin; 
-    if (isLogin) {
-        formTitle.textContent = 'Sign In';
-        authBtn.textContent = 'Login';
-        toggleLink.innerHTML = "Don't have an account? <a href='#'>Create One</a>";
-    } else {
-        formTitle.textContent = 'Sign Up';
-        authBtn.textContent = 'Sign Up';
-        toggleLink.innerHTML = "Already have an account? <a href='#'>Sign In</a>";
-    }
+    e.preventDefault(); isLogin = !isLogin; 
+    if (isLogin) { formTitle.textContent = 'Sign In'; authBtn.textContent = 'Login'; toggleLink.innerHTML = "Don't have an account? <a href='#'>Create One</a>"; } 
+    else { formTitle.textContent = 'Sign Up'; authBtn.textContent = 'Sign Up'; toggleLink.innerHTML = "Already have an account? <a href='#'>Sign In</a>"; }
 });
 
+// --- Auth Submit ---
 authForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const email = emailInput.value;
-    const password = passwordInput.value;
+    e.preventDefault(); const email = emailInput.value; const password = passwordInput.value;
     if (!email || !password) { alert('Please enter both email and password.'); return; }
-    try {
-        if (isLogin) {
-            await signInWithEmailAndPassword(auth, email, password);
-        } else {
-            await createUserWithEmailAndPassword(auth, email, password);
-        }
-    } catch (error) { console.error('Authentication Error: ', error.message); alert(error.message); }
+    try { if (isLogin) await signInWithEmailAndPassword(auth, email, password); else await createUserWithEmailAndPassword(auth, email, password); } 
+    catch (error) { console.error('Auth Error: ', error.message); alert(error.message); }
 });
 
+// --- Logout ---
 logoutBtn.addEventListener('click', async () => {
     try { await signOut(auth); } catch (error) { console.error('Logout Error: ', error.message); }
 });
 
+// --- Auth State ---
 onAuthStateChanged(auth, (user) => {
-    if (user) {
-        currentUserId = user.uid;
-        loginContainer.style.display = 'none'; 
-        appContainer.style.display = 'flex'; 
-        loadUserPlaylists(currentUserId);
-        switchView('playlist-view'); 
-    } else {
-        currentUserId = null;
-        loginContainer.style.display = 'block'; 
-        appContainer.style.display = 'none';  
-        clearPlaylistInputs();
-    }
+    if (user) { currentUserId = user.uid; loginContainer.style.display = 'none'; appContainer.style.display = 'flex'; loadUserPlaylists(currentUserId); switchView('playlist-view'); } 
+    else { currentUserId = null; loginContainer.style.display = 'block'; appContainer.style.display = 'none'; clearPlaylistInputs(); }
 });
 
+// --- Password Toggle ---
+if (togglePasswordBtn) {
+    togglePasswordBtn.addEventListener('click', () => {
+        const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordInput.setAttribute('type', type);
+        togglePasswordBtn.classList.toggle('fa-eye');
+        togglePasswordBtn.classList.toggle('fa-eye-slash');
+    });
+}
+
+// --- View Switching ---
 sidebarLinks.forEach(link => {
     link.addEventListener('click', (e) => {
         e.preventDefault();
@@ -143,6 +142,7 @@ function switchView(viewId) {
     }
 }
 
+// --- Utility Functions ---
 function clearPlaylistInputs() {
     happyPlaylistInput.value = ''; sadPlaylistInput.value = '';
     stressedPlaylistInput.value = ''; focusedPlaylistInput.value = '';
@@ -156,6 +156,7 @@ function getMoodEmoji(mood) {
     }
 }
 
+// --- Load and Display Mood History (WITH URL) ---
 async function loadMoodHistory(userId) {
     if (!moodLogList) return;
     moodLogList.innerHTML = '<p style="text-align: center; color: #999;">Loading history...</p>';
@@ -172,6 +173,7 @@ async function loadMoodHistory(userId) {
             const mood = data.mood || 'unknown';
             const timestamp = data.timestamp ? data.timestamp.toDate() : new Date(); 
             const mode = data.mode || 'unknown'; 
+            
             const dateStr = timestamp.toLocaleDateString();
             const timeStr = timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
             const emoji = getMoodEmoji(mood);
@@ -194,6 +196,7 @@ async function loadMoodHistory(userId) {
     }
 }
 
+// --- Load/Save Playlists ---
 async function loadUserPlaylists(userId) {
     try { 
         const docRef = doc(db, "userPlaylists", userId);
@@ -223,6 +226,7 @@ savePlaylistsBtn.addEventListener('click', async () => {
     } catch (e) { console.error("Error saving playlists: ", e); alert('Failed to save playlists.'); }
 });
 
+// --- EVENT LISTENERS ---
 happyPlaylistBtn.addEventListener('click', () => handlePlaylistClick('happy'));
 sadPlaylistBtn.addEventListener('click', () => handlePlaylistClick('sad'));
 stressedPlaylistBtn.addEventListener('click', () => handlePlaylistClick('stressed'));
@@ -242,6 +246,7 @@ langButtons.forEach(btn => {
 
 cancelQueryBtn.addEventListener('click', resetQueryView);
 
+// --- LOGIC: Playlist Mode ---
 async function handlePlaylistClick(mood) {
     if (!currentUserId) return;
     
@@ -262,6 +267,7 @@ async function handlePlaylistClick(mood) {
     }
 }
 
+// --- LOGIC: Instant Query Step 1 ---
 function handleQueryStep1(mood) {
     pendingQueryMood = mood;
     queryStep1.style.display = 'none';
@@ -270,9 +276,10 @@ function handleQueryStep1(mood) {
     languageInstruction.textContent = `You chose ${emoji} ${mood.toUpperCase()}. Which language do you prefer?`;
 }
 
+// --- LOGIC: Instant Query Step 2 (WITH LOGGING) ---
 async function handleQueryStep2(language) {
     if (!pendingQueryMood || !currentUserId) return;
-    
+
     const langCodes = {
         'Korean': 'ko',
         'Japanese': 'ja',
@@ -294,7 +301,6 @@ async function handleQueryStep2(language) {
 
     try {
         const apiUrl = `${YOUTUBE_API_URL}?part=id&type=video&q=${encodeURIComponent(finalQuery)}&maxResults=20&relevanceLanguage=${langCode}&key=${YOUTUBE_API_KEY}`;
-        
         const response = await fetch(apiUrl);
         const data = await response.json();
 
@@ -303,6 +309,7 @@ async function handleQueryStep2(language) {
             const videoId = data.items[randomIndex].id.videoId;
             const videoUrl = `https://www.youtube.com/watch?v=${videoId}`;
             
+            // Log to History
             logMoodToDB(pendingQueryMood, 'query', videoUrl);
             
             window.open(videoUrl, '_blank');
@@ -340,6 +347,7 @@ async function logMoodToDB(mood, mode, url) {
     } catch (e) { console.error("Error logging mood: ", e); }
 }
 
+// --- LOGIC: FEEDBACK ---
 if (sendFeedbackBtn) {
     sendFeedbackBtn.addEventListener('click', () => {
         const message = feedbackText.value;
