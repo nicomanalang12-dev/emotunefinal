@@ -1,9 +1,7 @@
-/* === 1. GLOBAL STYLES (Login Screen) === */
 body {
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
     
-    /* Login Background */
-    background-image: url('/src/frutigero aero bg.png');
+    background-image: url('/src/fruitego aero bg.png');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -19,7 +17,6 @@ body {
     color: #333;
 }
 
-/* === 2. LOGIN CONTAINER === */
 .login-container {
     background: rgba(255, 255, 255, 0.75);
     backdrop-filter: blur(15px);
@@ -58,7 +55,6 @@ body {
 }
 .input-group input:focus { outline: none; border-color: #3399ff; box-shadow: 0 0 5px rgba(51, 153, 255, 0.6); }
 
-/* === GLOSSY BUTTONS === */
 .auth-btn, .mood-selector button, .save-playlist-btn-style {
     width: 100%; padding: 12px; border: 1px solid #00568c; border-radius: 20px; 
     background: linear-gradient(to bottom, #7cd2ff 0%, #3497e8 50%, #0368c4 51%, #3497e8 100%);
@@ -77,16 +73,14 @@ body {
 .toggle-link { font-size: 0.9rem; color: #444; margin-top: 1.5rem; text-align: center; }
 .toggle-link a { color: #005a9c; text-decoration: none; font-weight: bold; }
 
-/* === 3. APP CONTAINER (Dashboard Background) === */
 .app-container.sidebar-layout {
     display: none; width: 100%; height: 100vh; max-width: none; padding: 0; border-radius: 0; 
-    /* Dashboard Background */
+    
     background-image: url('/src/2nd frutigero bg.jpg');
     background-size: cover; background-position: center; background-repeat: no-repeat; background-attachment: fixed;
     display: flex; overflow: hidden; 
 }
 
-/* === SIDEBAR === */
 .sidebar { 
     width: 260px; 
     background: linear-gradient(to right, rgba(20, 30, 48, 0.85), rgba(36, 59, 85, 0.75));
@@ -104,12 +98,10 @@ body {
 .logout-btn-sidebar { width: 100%; padding: 0.8rem; background: rgba(231, 76, 60, 0.2); border: 1px solid #e74c3c; color: #ffcccc; border-radius: 10px; cursor: pointer; font-weight: bold; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
 .logout-btn-sidebar:hover { background: linear-gradient(to bottom, #e74c3c, #c0392b); color: white; }
 
-/* === MAIN CONTENT === */
 .main-content { flex-grow: 1; background: rgba(244, 247, 250, 0.7); padding: 2rem; overflow-y: auto; height: 100vh; box-sizing: border-box; }
 .main-header { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(10px); padding: 1rem 2rem; border-radius: 15px; margin-bottom: 2rem; border: 1px solid rgba(255,255,255,0.6); box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
 .header-placeholder { color: #004a80; font-weight: 800; font-size: 1.8rem; text-shadow: 0 1px 0 rgba(255,255,255,0.8); }
 
-/* === DASHBOARD CARDS === */
 .dashboard-content { display: flex; gap: 2rem; flex-wrap: wrap; }
 .dashboard-card { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.9); border-radius: 15px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255,255,255,1); flex: 1; min-width: 350px; overflow: hidden; display: flex; flex-direction: column; }
 .card-header { padding: 1.25rem 1.5rem; border-bottom: 1px solid rgba(0,0,0,0.05); font-size: 1.2rem; font-weight: 700; color: #444; background: linear-gradient(to bottom, rgba(255,255,255,0.9), rgba(240,240,240,0.8)); }
@@ -121,7 +113,6 @@ body {
 .playlist-settings label { font-weight: bold; margin-top: 0.5rem; color: #005a9c; text-shadow: 0 1px 0 #fff; }
 .playlist-settings input { margin-bottom: 0.5rem; background: rgba(255,255,255,0.9); width: 100%; padding: 10px; border: 1px solid #a0a0a0; border-radius: 8px; }
 
-/* === VIEWS & HISTORY === */
 .main-view { display: none; animation: fadeIn 0.4s ease; }
 .main-view.view-active { display: block; }
 @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
@@ -135,16 +126,14 @@ body {
 .log-date { color: #888; font-size: 0.85rem; flex-grow: 1; }
 .log-mood { font-size: 1.1rem; font-weight: bold; min-width: 100px; text-align: right; color: #333; }
 .log-mood .emoji { margin-right: 8px; }
-.log-mode-pill { margin-left: 15px; padding: 4px 10px; border-radius: 12px; font-size: 0.75rem; font-weight: 600; text-transform: capitalize; }
+.log-mode-pill { margin-left: 15px; padding: 4px 10px; border-radius: 12px; font-size: 0.75rem; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px; box-shadow: 0 2px 2px rgba(0,0,0,0.1); }
 .log-mode-pill[data-mode="playlist"] { background: linear-gradient(to bottom, #d6f4ff, #b3e6ff); color: #006699; border: 1px solid #84cfff; }
 .log-mode-pill[data-mode="query"] { background: linear-gradient(to bottom, #ffe6f0, #ffcce0); color: #99004d; border: 1px solid #ff99bf; }
 
-/* History Link Icon */
 .history-link { margin-left: 15px; color: #3498db; font-size: 1.2rem; transition: all 0.2s; background: white; border-radius: 50%; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
 .history-link:hover { color: #fff; background: #3498db; transform: scale(1.1); }
 .history-link i { pointer-events: none; }
 
-/* Responsive */
 @media (max-width: 768px) {
     .sidebar { width: 70px; overflow: hidden; }
     .sidebar-header h2, .sidebar-nav li a span, .sidebar-footer button span { display: none; }
@@ -152,7 +141,6 @@ body {
     .sidebar-nav li.active a, .sidebar-nav li a:hover { border-left: none; background: rgba(255,255,255,0.1); }
     .sidebar-footer { padding: 1rem 0.5rem; }
     .logout-btn-sidebar { padding: 0.75rem 0.5rem; justify-content: center; font-size: 0.8rem; }
-    .logout-btn-sidebar i { margin-right: 0; }
     .main-content { padding: 1rem; }
     .main-header { padding: 0.75rem 1rem; }
     .login-container { width: 90%; }
