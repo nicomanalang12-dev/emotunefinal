@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emotune - Mood-Based Playlists</title>
+    
+    <link rel="stylesheet" href="/src/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script type="text/javascript">
+       (function(){
+          emailjs.init("Mq3DHE-7E1nccTgSd");
+       })();
+    </script>
+</head>
+<body>
+
+    <div id="login-container" class="login-container">
+        <form id="auth-form" class="form-section">
+            <h2 id="form-title">Sign In</h2>
+            <div class="input-group">
+                <i class="fas fa-envelope"></i>
+                <input type="email" id="email" placeholder="Email" required>
+            </div>
+            <div class="input-group">
+                <i class="fas fa-lock"></i>
+                <input type="password" id="password" placeholder="Password" required>
+            </div>
+            <button type="submit" id="auth-btn" class="auth-btn">Login</button>
+            <p id="toggle-link" class="toggle-link">
+                Don't have an account? <a href="#">Create One</a>
+            </p>
+        </form>
+    </div>
+
+    <div id="app-container" class="app-container sidebar-layout" style="display: none;">
+        
+        <aside class="sidebar">
+            
+            <div class="sidebar-header" style="display: flex; align-items: center; justify-content: center; gap: 10px; padding: 1.5rem 1rem;">
+                <img src="/src/logo_aero-removebg-preview.png" alt="Emotune Logo" style="height: 50px; width: auto; object-fit: contain;">
+                <h2 style="margin: 0; font-size: 1.5rem;">Emotune</h2>
+            </div>
+
+            <nav class="sidebar-nav">
+                <ul>
+                    <li data-view="playlist-view" class="active">
+                        <a href="#">
+                            <i class="fas fa-music"></i>
+                            <span>My Playlists</span>
+                        </a>
+                    </li>
+                    <li data-view="query-view">
+                        <a href="#">
+                            <i class="fas fa-search"></i>
+                            <span>Instant Query</span>
+                        </a>
+                    </li>
+                    <li data-view="history-view">
+                        <a href="#">
+                            <i class="fas fa-history"></i>
+                            <span>History</span>
+                        </a>
+                    </li>
+                    <li data-view="feedback-view">
+                        <a href="#">
+                            <i class="fas fa-comment-dots"></i>
+                            <span>Feedback</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            <div class="sidebar-footer">
+                <button id="logout-btn" class="logout-btn-sidebar">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </button>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <div class="main-header">
+                <h1 id="view-title" class="header-placeholder">My Playlists</h1>
+            </div>
+
+            <div id="playlist-view" class="main-view view-active">
+                <div class="dashboard-content">
+                    <div class="dashboard-card">
+                        <div class="card-header mood-header">What are you feeling?</div>
+                        <div class="card-body">
+                            <p>Select your mood to open your saved playlist or search for a suggested one.</p>
+                            <div class="mood-selector">
+                                <button id="happy-playlist-mode">😊 Happy</button>
+                                <button id="sad-playlist-mode">😔 Sad</button>
+                                <button id="stressed-playlist-mode">🥵 Stressed</button>
+                                <button id="focused-playlist-mode">🧐 Focused</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="dashboard-card">
+                        <div class="card-header playlist-header">Set Your Playlists</div>
+                        <div class="card-body">
+                            <p>Enter the full URL (e.g., Spotify, YouTube) for your preferred mood playlists.</p>
+                            <div class="playlist-settings">
+                                <label for="happy-playlist">Happy Playlist URL:</label>
+                                <input type="url" id="happy-playlist" placeholder="e.g., https://spotify.com/happy-mix">
+                                
+                                <label for="sad-playlist">Sad Playlist URL:</label>
+                                <input type="url" id="sad-playlist" placeholder="e.g., https://youtube.com/calm-music">
+                                
+                                <label for="stressed-playlist">Stressed Playlist URL:</label>
+                                <input type="url" id="stressed-playlist" placeholder="e.g., https://spotify.com/sleep-aid">
+                                
+                                <label for="focused-playlist">Focused Playlist URL:</label>
+                                <input type="url" id="focused-playlist" placeholder="e.g., https://youtube.com/lofi-beats">
+                            </div>
+                            <button id="save-playlists-btn" class="auth-btn save-playlist-btn-style">Save Playlists</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="query-view" class="main-view">
+                <div class="dashboard-content">
+                    <div class="dashboard-card full-width-card">
+                        <div class="card-header mood-header">Instant Music Search</div>
+                        <div class="card-body">
+                            
+                            <div id="query-step-1">
+                                <p>Select your mood to instantly search YouTube for the best music matching that feeling.</p>
+                                <div class="mood-selector">
+                                    <button id="happy-query-mode">😊 Happy</button>
+                                    <button id="sad-query-mode">😔 Sad</button>
+                                    <button id="stressed-query-mode">🥵 Stressed</button>
+                                    <button id="focused-query-mode">🧐 Focused</button>
+                                </div>
+                            </div>
+
+                            <div id="query-step-2" style="display: none;">
+                                <p id="language-instruction" style="font-weight: bold; color: #333; margin-bottom: 1rem;">Which language do you prefer?</p>
+                                <div class="mood-selector">
+                                    <button class="lang-btn" data-lang="Korean">🇰🇷 Korean</button>
+                                    <button class="lang-btn" data-lang="Japanese">🇯🇵 Japanese</button>
+                                    <button class="lang-btn" data-lang="English">🇺🇸 English</button>
+                                    <button class="lang-btn" data-lang="Tagalog">🇵🇭 Tagalog</button>
+                                </div>
+                                <button id="cancel-query-btn" style="margin-top: 15px; background: none; border: none; color: #888; cursor: pointer; text-decoration: underline;">Back to Moods</button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="history-view" class="main-view">
+                <div class="dashboard-content">
+                    <div class="dashboard-card full-width-card">
+                        <div class="card-header mood-header">Mood Log History</div>
+                        <div class="card-body">
+                            <p>A record of the moods you've logged and the mode used (Playlist/Query).</p>
+                            <div id="mood-log-list" class="mood-log-list">
+                                <p style="text-align: center; color: #999;">Loading history...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="feedback-view" class="main-view">
+                <div class="dashboard-content">
+                    <div class="dashboard-card full-width-card">
+                        <div class="card-header playlist-header">Send Feedback</div>
+                        <div class="card-body">
+                            <p>Found a bug or have a suggestion? Send it directly to the developer.</p>
+                            <textarea id="feedback-text" rows="5" placeholder="Type your feedback here..." style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ddd; font-family: inherit; margin-bottom: 15px; resize: vertical;"></textarea>
+                            <button id="send-feedback-btn" class="auth-btn">Send Feedback</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <script type="module" src="/src/main.js"></script>
+</body>
+</html>
